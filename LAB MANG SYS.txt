@@ -1,0 +1,56 @@
+
+
+DROP TABLE IF EXISTS Borrowed_Books;
+DROP TABLE IF EXISTS Books;
+DROP TABLE IF EXISTS Members;
+
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    BookName VARCHAR(100)
+);
+
+CREATE TABLE Members (
+    MemberID INT PRIMARY KEY,
+    MemberName VARCHAR(100)
+);
+
+CREATE TABLE Borrowed_Books (
+    BorrowID INT PRIMARY KEY,
+    BookID INT,
+    MemberID INT,
+    BorrowDate DATE,
+    DueDate DATE,
+    ReturnDate DATE,
+    FOREIGN KEY (BookID) REFERENCES Books (BookID),
+    FOREIGN KEY (MemberID) REFERENCES Members (MemberID)
+);
+
+INSERT INTO Books (BookID, BookName)  
+VALUES
+    (1, 'RAMAYAN'), 
+    (2, 'MAHABHARAT'),  
+    (3, 'QURAN'),  
+    (4, 'BIBLE');
+
+INSERT INTO Members (MemberID, MemberName)
+VALUES
+    (101, 'RAMESH'),
+    (102, 'RAJ'),
+    (103, 'RAM'),
+    (104, 'PRINCE');
+
+INSERT INTO Borrowed_Books (BorrowID, BookID, MemberID, BorrowDate, DueDate, ReturnDate)
+VALUES
+    (21, 1, 101, '2024-05-05', '2024-05-15', NULL),
+    (22, 2, 102, '2024-05-10', '2024-06-25', NULL),
+    (23, 3, 103, '2024-05-20', '2024-05-26', '2024-05-24'),
+    (24, 4, 104, '2024-05-25', '2024-05-30', NULL);
+
+	
+	SELECT bb.BorrowID, b.BookName, m.MemberName, bb.DueDate
+FROM Borrowed_Books bb
+JOIN Books b ON bb.BookID = b.BookID
+JOIN Members m ON bb.MemberID = m.MemberID
+WHERE bb.DueDate < CAST(GETDATE() AS DATE)  -- compare with today
+  AND bb.ReturnDate IS NULL;
+
