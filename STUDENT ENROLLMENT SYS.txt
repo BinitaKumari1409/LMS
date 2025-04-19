@@ -1,0 +1,52 @@
+-- Drop tables if they exist
+DROP TABLE IF EXISTS Enrollments;
+DROP TABLE IF EXISTS Courses;
+DROP TABLE IF EXISTS Students;
+
+-- Create Students table
+CREATE TABLE Students (
+  student_id INT PRIMARY KEY,
+  name VARCHAR(100)
+);
+
+-- Create Courses table
+CREATE TABLE Courses (
+  course_id INT PRIMARY KEY,
+  course_name VARCHAR(100)
+);
+
+-- Create Enrollments table
+CREATE TABLE Enrollments (
+  enrollment_id INT PRIMARY KEY,  
+  student_id INT,
+  course_id INT,
+  FOREIGN KEY (student_id) REFERENCES Students(student_id),
+  FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+);
+
+-- Insert into Students
+INSERT INTO Students (student_id, name) VALUES
+(1, 'PRINCE'),
+(2, 'PARI'),
+(3, 'PIHU'),
+(4,'PRACHI');
+-- Insert into Courses
+INSERT INTO Courses (course_id, course_name) VALUES
+(101, 'MATHS'),
+(102, 'ENGLISH'),
+(103, 'SCIENCE'),
+(104,'BIOLOGY');
+
+-- Insert into Enrollments
+INSERT INTO Enrollments (enrollment_id, student_id, course_id) VALUES
+(1, 1, 101),
+(2, 1, 102),
+(3, 2, 103),
+(4, 3, 101);
+
+-- Get enrolled courses for a student (example: PRINCE)
+SELECT c.course_id, c.course_name
+FROM Enrollments e
+JOIN Students s ON e.student_id = s.student_id
+JOIN Courses c ON e.course_id = c.course_id
+WHERE s.name = 'PRINCE';
